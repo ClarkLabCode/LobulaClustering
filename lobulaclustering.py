@@ -62,6 +62,12 @@ depth, spread, dep_fn = getmorphology.getmorphology()
 if con_fn[con_fn.find('bodyidlist'):] != dep_fn[dep_fn.find('bodyidlist'):]:
     print('Connectivity and morphology matrices are based on different sets of cells. Aborting')
 else:
+    # Show what hard-coded parameters we are using + which dataset we are using
+    print('Connectivity matrix we are using: ', con_fn)
+    print('Morphology matrix we are using: ', dep_fn)
+    print('Relative weight between connectivity, depth, spread: ',data_weight)
+    print('#Cluster requested: ',n_cluster)
+
     ## Data preparation
     # Find which is the first data column (this should be in principle always 3)
     con_datastart = connectivity.columns.get_loc("bodyId")+1
@@ -191,7 +197,7 @@ else:
                                          cutoff=0.05,
                                          labels=np.unique(clabel),
                                          ax=ax[i,j])
-    ax.set_title('LP/LPLC inputs by cell of interest clusters')
+    fig.suptitle('LP/LPLC inputs by cell of interest clusters')
 
 
     # Visualize as a dendrogram

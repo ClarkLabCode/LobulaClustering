@@ -104,7 +104,7 @@ def getbodyids_singletype(**kwargs):
 
     # Fetch and save body Ids of a set cell type
     # for validation of depth extraction
-    print('Fetching bodyIds fron the server...')
+    print('Fetching bodyIds from the server...')
 
     # Connect to the server
     f = open("authtoken","r")

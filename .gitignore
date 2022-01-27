@@ -1,3 +1,4 @@
 *.csv
 .spyproject
 authtoken
+**/__pycache__

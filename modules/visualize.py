@@ -125,7 +125,7 @@ def showsortedUMAPscatter(mat,label,**kwargs):
 
 def showUMAPscatter2D(mat,label):
     # adjust dot size according to the number of samples
-    dot_size = np.minimum(np.ceil(1000/mat.shape[0]),10)
+    dot_size = np.minimum(np.ceil(5000/mat.shape[0]),10)
 
     n_cat = len(np.unique(label))
     # do PCA
