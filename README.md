@@ -60,7 +60,7 @@ This script will download the coordinates of postsynapses of specified LC and LP
 
 ## Organizations of directory
 
-- ```lobulaclustering.py``` : the main clustering description
+- ```lobulaclustering.py``` : the main clustering script
 - ```morphology_validation.py``` : the script to validate the morphology summary features by analyzing LC/LPLCs with known morphology
 - modules : a folder containing modules to download, save, preprocess, and load connectivity and morphology data
 - data : a folder containing the end results of the clustering as well as downloaded and preprocessed intermediate data
