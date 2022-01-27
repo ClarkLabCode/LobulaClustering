@@ -1,7 +1,18 @@
 # Lobula Clustering
 
-Extend lobula clustering we have performed as a part of LPLC1 to all neurons in lobula.
-Re-creating the code in a seprate folder so it is easy to eventually publish this as a separate repo.
+This repository contains code to run the analysis presented in the following publication:
+
+[Tanaka, R. & Clark, D. A. (2022) [final title TBD] bioRxiv.](https://www.biorxiv.org/content/10.1101/2022.XXX)
+
+The goal of the analysis is to categorize fragmented lobula visual neurons in the [hemibrain](https://www.janelia.org/project-team/flyem/hemibrain) dataset into putative cell types, based on their connectivity to identified cell types as well as their morphology (layer innervation patterns and the spatial extent of their axon terminals).
+
+
+
+
+
+
+
+
 
 
 ## Geting started with hemibrain
