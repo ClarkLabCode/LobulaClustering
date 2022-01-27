@@ -1,13 +1,13 @@
 """
 
-Validate and optimize morphology metrics
+Validate and optimize morphology metrics (Fig. 2)
 
-Tangential based estimation of synapse depth assumes that lobula layers are fit
+Tangential cell based estimation of synapse depth assumes that lobula layers are fit
 well enough with a quadric surface and layers are parallel to each other, which
 can introduce systematic error correlated with XY position and can cause over
 dividing in the clustering.
 This script visualizes postsynapses of LC neurons with known layer innervation
-patterns and see if there is anything that can be done on that
+patterns and see if these assumptions hold reasonably
 
 """
 # Packages
@@ -34,7 +34,6 @@ import modules.utility as utility
 # cell types to analyze
 ctlist = ('LC4','LC6','LC9','LC11','LC12','LC13','LC15','LC16','LC17','LC18',
           'LC20','LC21','LC22','LC24','LC25','LC26','LPLC1','LPLC2')
-ctlist = ('LC4','LPLC2')
 
 # load morphology matrices (calculate if not existing)
 label = [] # list to store cell type labels
@@ -91,11 +90,13 @@ ax.set_yticklabels(np.arange(-20,55,5))
 ax.set_xticks(np.arange(len(ctlist)))
 ax.set_xticklabels(ctlist,rotation=45,ha='right')
 ax.set_ylabel('innervation depth (um)')
+fig.suptitle('Fig. 2B')
 fig.colorbar(im,ax=ax)
 
 ## 2. Show cell-averaged spread feature against each other
 # with SEM
 fig, ax = plt.subplots(1,2)
+fig.suptitle('Fig. 2C/D')
 for ii in range(2):
     ax[ii].errorbar(mean_spr[:,ii],mean_spr[:,ii+1],xerr=sem_spr[:,ii],yerr=sem_spr[:,ii+1],fmt='none')
     ax[ii].scatter(mean_spr[:,ii],mean_spr[:,ii+1])

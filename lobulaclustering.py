@@ -5,6 +5,7 @@
 
  This function load saved connectivity and morphology (depth/spraed) matrices
  and run hiearchical clustering on them
+
  If this is the first time you run this, subroutines will
  - download bodyIds of lobula intrinsic neurons (given range of synapse counts)
  - fetch connectivity to downstream neuron types (given a list of bodyIds)
@@ -12,8 +13,6 @@
  - Do PCA and fit a quadric model to some landmark cells
  - Rotate each synapse into the PC space and calculate their relative depth
  - Calculate spread and depth histogram based on PC-rotated synapse coordinates and relative depth
-
- Everything here should be deterministic
 
 """
 # Packages
@@ -40,22 +39,25 @@ import modules.utility as utility
 # just making explicit what is being called...
 print('Running lobulaclustering.py...')
 
-## 0. analysis parameters
+## 0. Hard-coded analysis parameters
 data_weight = (5,3,1) # how much we trust each dataset (con/dep/spr)
-n_cluster = 20
-nShow = 30
+n_cluster = 40
+
+nShow = 30 # this determines how many connectivity features we want to see in the plot (does not affect the analysis itself)
 
 ## 1. data preparation
 
 # note: make sure this runs when running the script for the first time
 
 # load connectivity matrix
+# or create one if there is none saved
 connectivity, con_fn = getconnectivity.getconnectivity()
 
 # load morphology matrix
+# or create one if there is none saved
 depth, spread, dep_fn = getmorphology.getmorphology()
 
-# check connectivity and morphology are based on the same bodyidlist
+# Check connectivity and morphology are based on the same bodyidlist
 # The assumption is that the order of the bodyId should be the same across these
 # three files. This should be true by constructrion (they are created by appending
 # new columns to bodyidlist)
@@ -78,7 +80,6 @@ else:
     mat_con = connectivity.iloc[:,con_datastart:].to_numpy()
     mat_dep = depth.iloc[:,dep_datastart:].to_numpy()
     mat_spr = spread.iloc[:,spr_datastart:].to_numpy()
-
 
     # normalize by total dispersion (and show dispersion)
     disp_con = np.sum(np.var(mat_con,axis=0))
@@ -107,51 +108,52 @@ else:
     mat_all = np.concatenate((norm_mat_con,norm_mat_dep,norm_mat_spr),axis=1)
 
     ## Actual Clustering
-    # Do clustering with ward minimization
+    # Do clustering with ward minimization & show the dendrogram
     fig, ax = plt.subplots()
     linkage = sch.linkage(mat_all, method='ward', metric='euclidean')
     dendrogram = sch.dendrogram(linkage, truncate_mode='lastp', p =n_cluster)
     clabel = sch.fcluster(linkage, n_cluster, criterion='maxclust')
-    ax.set_title('Dendrogram of cells of interest')
+    ax.set_title('Dendrogram of cells of interest (Fig. 3A)')
 
     ## Visualization and post-processing
+
     # sort and visualize
     # visualize the connectivity matrix
     fig, ax = visualize.showsortedmatrix(mat_con[:,important_target_ind],clabel,rowlabel=label_con[important_target_ind])
-    ax.set_title('Connectivity')
+    ax.set_title('Connectivity (Fig. 3B)')
     ax.set_xlabel('Cells of interest')
 
     fig, ax = visualize.showsortedmatrix(mat_dep,clabel)
-    ax.set_title('Innervation Depth')
+    ax.set_title('Innervation Depth (Fig. 3C)')
     ax.set_xlabel('Cells of interest')
     ax.set_ylabel('#Depth bin')
 
     fig, ax = visualize.showsortedmatrix(mat_spr,clabel)
-    ax.set_title('Synapse Spread (um)')
+    ax.set_title('Synapse Spread (um) (Fig. 3D)')
     ax.set_xlabel('Cells of interest')
     ax.set_ylabel('PC axis')
 
     # visualize the clusters in the PC space
     #visualize.showsortedUMAPscatter(mat_all,clabel,n_components=2)
     fig, ax = visualize.showUMAPscatter2D(mat_all,clabel)
-    ax.set_title('UMAP on the concatenated weighted feature matrix')
+    ax.set_title('UMAP on the concatenated weighted feature matrix (Fig. 3E)')
     ax.set_xlabel('UMAP1')
     ax.set_ylabel('UMAP2')
     utility.reporttargetpercluster(mat_con, label_con, clabel)
 
     # visualize mean depth profile for each cluster
     fig, ax = visualize.plotmeanbycluster(mat_dep, clabel)
-    ax.set_title('Mean synapse per depth bin for each cluster')
+    ax.set_title('Mean synapse per depth bin for each cluster (Appendix Figs)')
     ax.set_xlabel('#Depth bin')
     ax.set_ylabel('#synapses')
 
     # visualize mean spread profile for each cluster
     fig, ax = visualize.meanscatterwitherror(mat_spr,clabel)
+    ax[0].set_title('synapse spread (Appendix Figs)')
     ax[0].set_xlabel('spread along PC1 (um)')
     ax[0].set_ylabel('spread along PC2 (um)')
     ax[1].set_xlabel('spread along PC2 (um)')
     ax[1].set_ylabel('spread along PC3 (um)')
-
 
     plt.show()
 
@@ -166,7 +168,7 @@ else:
     outdf.to_csv('./data/result/'+outfn)
 
 
-    ## Additional analysis
+    ## Additional analysis ##
     # Connectivity from the clusters to LCs
     # limiting this to "classical LCs" up to Wu Nern 2016
     # interested readers can add LC beyond 26
@@ -197,7 +199,7 @@ else:
                                          cutoff=0.05,
                                          labels=np.unique(clabel),
                                          ax=ax[i,j])
-    fig.suptitle('LP/LPLC inputs by cell of interest clusters')
+    fig.suptitle('LP/LPLC inputs by cell of interest clusters (Fig. 5A)')
 
 
     # Visualize as a dendrogram
@@ -205,7 +207,7 @@ else:
     fig, ax = plt.subplots()
     dendrogram_reverse = sch.dendrogram(linkage_reverse, labels=LC_list)
     out_ind = dendrogram_reverse['leaves']
-    ax.set_title('Clustering of LC/LPLCs by their connectivity to cell of interest clusters')
+    ax.set_title('Clustering of LC/LPLCs by their connectivity to cell of interest clusters (Fig. 5B)')
 
     # visualization
     fig, ax = plt.subplots()
@@ -215,6 +217,6 @@ else:
     ax.set_xlabel('cluster')
     ax.set_yticks(np.arange(len(LC_list)))
     ax.set_yticklabels(LC_list[out_ind])
-    ax.set_title('Normalized mean LP/LPLC inputs by cell of interest clusters')
+    ax.set_title('Normalized mean LP/LPLC inputs by cell of interest clusters (Fig. 5B)')
     fig.colorbar(im,ax=ax)
     plt.show()
