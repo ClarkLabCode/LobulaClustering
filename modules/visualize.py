@@ -48,6 +48,7 @@ def plotquadricandscatter(pca,coeff,df,**kwargs):
    fig, ax = plt.subplots(subplot_kw={"projection": '3d'})
    surf = ax.plot_trisurf(mesh1,mesh2,mesh3,cmap ='cool',alpha=0.5)
    sca  = ax.scatter(PCs[showind,0],PCs[showind,1],PCs[showind,2],c=rawdepth[showind],s=1)
+   ax.set_title('Quadric model')
 
 
 # Given a feature matrix (e.g. connectivity) and a label vector (e.g. clusters)
