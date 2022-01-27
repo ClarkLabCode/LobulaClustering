@@ -22,11 +22,14 @@ def getbodyids(**kwargs):
         filename = kwargs.get('filename')
     else:
         filename = ''
-        
+
+    # just making explicit what is being called...
+    print('Running getbodyids...')
+
     # Check if we already have fetched bodyids from hemibrain
     bodyidlistlist = glob.glob('.\\data\\bodyidlist\\*.csv')
     newlist = [listname for listname in bodyidlistlist if filename in listname]
-    
+
     # If they exist, ask if we want to read them
     if newlist:
          if len(newlist)==1:
@@ -38,7 +41,7 @@ def getbodyids(**kwargs):
          # load the list
          bodyidlist = pd.read_csv(newlist[ind])
          _, filename = os.path.split(newlist[ind])
-    else: 
+    else:
         # if saved id list doesn't exist, load them from neuprint
         # We only care about un-labeled neurons
         bodyidlist, filename = getbodyidsfromservertypenull(**kwargs)
@@ -51,6 +54,9 @@ def getbodyidsfromservertypenull(**kwargs):
         ub = kwargs.get('ub')
     if 'lb' in kwargs:
         lb = kwargs.get('lb')
+
+    # just making explicit what is being called...
+    print('Running getbodyidsfromservertypenull...')
 
     # Run neuPrint query to get bodyIds of lobula small terminals
     # which we will analyze by running clustering
@@ -85,14 +91,17 @@ def getbodyids_singletype(**kwargs):
     if 'celltype' in kwargs:
         celltype = kwargs.get('celltype')
     else:
-        celltype = input('Enter the cell type of interest: ')    
+        celltype = input('Enter the cell type of interest: ')
+
+    # just making explicit what is being called...
+    print('Running getbodyids_singletype...')
 
     # we need this to avoid cells with no synapse of requested type
     if 'synapseType' in kwargs:
         synapseType = kwargs.get('synapseType')
     else:
         synapseType = 'post'
-        
+
     # Fetch and save body Ids of a set cell type
     # for validation of depth extraction
     print('Fetching bodyIds fron the server...')

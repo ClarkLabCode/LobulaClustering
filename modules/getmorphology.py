@@ -23,18 +23,18 @@ import modules.utility as utility
 
 # Return morphology (depth + spread) dataframes -- either saved or new
 def getmorphology(**kwargs):
-    # You can specify a substring of filename to automatically select saved 
+    # You can specify a substring of filename to automatically select saved
     # morphology data -- provide nonexistent name to calculate something anew
     if 'filename' in kwargs:
         filename = kwargs.get('filename')
     else:
         filename = ''
-    
+
     if 'landmarkname' in kwargs:
         landmarkname = kwargs.get('landmarkname')
     else:
         landmarkname = ''
-            
+
     # sometimes you might want to try different binning parameters for morphology
     # with the same bodyId list. Use this flag for such cases
     if 'recaluculateMorphology' in kwargs:
@@ -42,7 +42,9 @@ def getmorphology(**kwargs):
     else:
         recalcFlag = 0
 
-    
+    # just making explicit what is being called...
+    print('Running getmorphology...')
+
     # First, list the existing morphology matrices
     # assumption is that depth/spread matrices are generated as pairs
     depthlist = glob.glob('.\\data\\depth\\depth_*.csv')
@@ -57,7 +59,7 @@ def getmorphology(**kwargs):
             print('Found multiple dataset that matches the filename provided')
             utility.print_indexed(newlist)
             ind = int(input('Select which one you want to use : '))
-        
+
         depth = pd.read_csv(newlist[ind])
         _, depth_filename = os.path.split(newlist[ind])
         spread = pd.read_csv('./data/spread/spread'+depth_filename[5:])
@@ -69,13 +71,13 @@ def getmorphology(**kwargs):
 
 # Calculate morphology given bodyId list
 def calcmorphology(**kwargs):
-    # load relevant kwarg    
+    # load relevant kwarg
     # Synapse type to use
     if 'synapseType' in kwargs:
         synapseType = kwargs.get('synapseType')
     else:
         synapseType = 'pre'
-    
+
     # histogram related
     if 'minD' in kwargs:
         minD = kwargs.get('minD')
@@ -83,7 +85,10 @@ def calcmorphology(**kwargs):
         maxD = kwargs.get('maxD')
     if 'binSize' in kwargs:
         binSize = kwargs.get('binSize')
-        
+
+    # just making explicit what is being called...
+    print('Running calcmorphology...')
+
     # Get a bodyId list you want to use
     bodyidlist, filename = getbodyids.getbodyids(**kwargs)
 
@@ -140,16 +145,19 @@ def loadlobulamodel(**kwargs):
         landmarkname = kwargs.get('landmarkname')
     else:
         landmarkname = ''
-    
+
     if 'showModel' in kwargs:
         showModel = kwargs.get('showModel')
     else:
-        showModel = 0
-        
+        showModel = 1
+
+    # just making explicit what is being called...
+    print('Running loadlobulamodel...')
+
     # See existing "landmark" synapse directories
     landmarklist = glob.glob('./data/landmark/*.csv')
     newlist = [landmark for landmark in landmarklist if landmarkname in landmark]
-    
+
     if newlist:
         if len(newlist)==1:
             ind = 0
@@ -157,13 +165,17 @@ def loadlobulamodel(**kwargs):
             print('Found multiple landmark data matching the landmarkname provided')
             utility.print_indexed(landmarklist)
             ind = int(input('Enter which one to use (type -1 if you want to try new cell): '))
-        
+
         landmark = pd.read_csv(newlist[ind])
         _, filename = os.path.split(newlist[ind])
         landmarkname = filename[:-4] # keep the name of the cell
 
     # if there is nothing saved or if you want to try a new landmark
     else:
+        # in case nothing was saved and nothing was specified, ask here
+        if not landmarkname:
+            landmarkname = input('Enter the name of cell type you want to use as a landmark: ')
+
         # Type in the cell type to use
         print('Downloading '+landmarkname+' synapses...')
 
@@ -205,8 +217,8 @@ def loadlobulamodel(**kwargs):
 
     # fitting
     modelcoeff, r, rank, s = np.linalg.lstsq(A,PC3,rcond=None)
-    
-    
+
+
     # show goodness of fit
     r2 = 1 - r / np.sum(PC3**2)
     print('R2 of the lobula model was: ',r2)

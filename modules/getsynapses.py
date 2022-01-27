@@ -27,6 +27,9 @@ def getsynapses(bodyid,synapseType):
     else:
         synapseDir = '.\\data\\postsynapselist\\'
 
+    # just making explicit what is being called...
+    print('Running getsynapses...')
+
     # First, check if synapses of this neuron has been already saved
     thisSynapseFile = glob.glob(synapseDir+str(bodyid)+'.csv')
 
