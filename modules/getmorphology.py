@@ -52,18 +52,18 @@ def getmorphology(**kwargs):
     # take the ones whose name contains the specified filename
     newlist = [file for file in depthlist if filename in file and landmarkname in file]
 
+    ind = 0
     if newlist and not recalcFlag:
-        if len(newlist)==1:
-            ind = 0
-        else:
-            print('Found multiple dataset that matches the filename provided')
-            utility.print_indexed(newlist)
-            ind = int(input('Select which one you want to use : '))
 
-        depth = pd.read_csv(newlist[ind])
-        _, depth_filename = os.path.split(newlist[ind])
-        spread = pd.read_csv('./data/spread/spread'+depth_filename[5:])
-    else:
+        print('Found multiple dataset that matches the filename provided')
+        utility.print_indexed(newlist)
+        ind = int(input('Select which one you want to use (enter -1 to make a new one) : '))
+        if not ind<0:
+            depth = pd.read_csv(newlist[ind])
+            _, depth_filename = os.path.split(newlist[ind])
+            spread = pd.read_csv('./data/spread/spread'+depth_filename[5:])
+
+    if ind<0 or not newlist:
         # if not calculate anew
         print('Morphology dataset with the specified filename does not exist.')
         depth, spread, depth_filename = calcmorphology(**kwargs)
@@ -158,20 +158,18 @@ def loadlobulamodel(**kwargs):
     landmarklist = glob.glob('./data/landmark/*.csv')
     newlist = [landmark for landmark in landmarklist if landmarkname in landmark]
 
+    ind = 0
     if newlist:
-        if len(newlist)==1:
-            ind = 0
-        else:
-            print('Found multiple landmark data matching the landmarkname provided')
-            utility.print_indexed(landmarklist)
-            ind = int(input('Enter which one to use (type -1 if you want to try new cell): '))
-
-        landmark = pd.read_csv(newlist[ind])
-        _, filename = os.path.split(newlist[ind])
-        landmarkname = filename[:-4] # keep the name of the cell
+        print('Found landmark data matching the landmarkname provided')
+        utility.print_indexed(landmarklist)
+        ind = int(input('Enter which one to use (type -1 if you want to try new cell): '))
+        if not ind<0:
+            landmark = pd.read_csv(newlist[ind])
+            _, filename = os.path.split(newlist[ind])
+            landmarkname = filename[:-4] # keep the name of the cell
 
     # if there is nothing saved or if you want to try a new landmark
-    else:
+    if ind<0 or not newlist:
         # in case nothing was saved and nothing was specified, ask here
         if not landmarkname:
             landmarkname = input('Enter the name of cell type you want to use as a landmark: ')

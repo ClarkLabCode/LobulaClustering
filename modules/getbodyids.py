@@ -31,17 +31,17 @@ def getbodyids(**kwargs):
     newlist = [listname for listname in bodyidlistlist if filename in listname]
 
     # If they exist, ask if we want to read them
+    ind = 0
     if newlist:
-         if len(newlist)==1:
-             ind = 0
-         else:
-             print('Found multiple lists of bodyIds with the provided filename:')
-             utility.print_indexed(newlist)
-             ind = int(input('Which one do you want to load?: '))
-         # load the list
-         bodyidlist = pd.read_csv(newlist[ind])
-         _, filename = os.path.split(newlist[ind])
-    else:
+         print('Found saved lists of bodyIds with the provided filename:')
+         utility.print_indexed(newlist)
+         ind = int(input('Which one do you want to load? (enter -1 to create a new one): '))
+
+         if not ind<0:
+             # load the list
+             bodyidlist = pd.read_csv(newlist[ind])
+             _, filename = os.path.split(newlist[ind])
+    if ind<0 or not newlist:
         # if saved id list doesn't exist, load them from neuprint
         # We only care about un-labeled neurons
         bodyidlist, filename = getbodyidsfromservertypenull(**kwargs)

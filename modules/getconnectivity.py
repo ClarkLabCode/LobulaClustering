@@ -29,27 +29,24 @@ def getconnectivity(**kwargs):
     newlist = [cons for cons in connectivitylist if filename in cons]
 
     # If they exist, ask if we want to read them
+    ind = 0
     if newlist:
-        if len(newlist)==1:
-            ind = 0
-        else:
-            print('Found multiple saved connectivity dataset with the specified filename:')
-            utility.print_indexed(connectivitylist)
-            ind = int(input('Which one do you want to load?: '))
+        print('Found saved connectivity matrices with the specified filename:')
+        utility.print_indexed(connectivitylist)
+        ind = int(input('Which one do you want to load? (enter -1 to create a new connectivity matrix): '))
+        if not ind<0:
+            connectivity = pd.read_csv(newlist[ind])
+            _, filename = os.path.split(newlist[ind])
 
-        connectivity = pd.read_csv(newlist[ind])
-        _, filename = os.path.split(newlist[ind])
-
-    else: # if saved id list doesn't exist, load them from neuprint
+    # if saved id list doesn't exist (or if you just want a new one), load them from neuprint
+    if ind<0 or not newlist:
         connectivity, filename = getconnectivityfromserver(**kwargs)
-
     return connectivity, filename
 
 def getconnectivityfromserver(**kwargs):
 
     # just making explicit what is being called...
     print('Running getconnectivityfromserver...')
-
     print('Newly calculating a connectivity matrix!')
 
     # Connect to the neuPrint server
