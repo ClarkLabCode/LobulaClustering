@@ -6,6 +6,8 @@ This repository contains code to run the analysis presented in the following pub
 
 The goal of the analysis is to categorize fragmented lobula visual neurons in the [hemibrain](https://www.janelia.org/project-team/flyem/hemibrain) dataset into putative cell types, based on their connectivity to identified cell types as well as their morphology (layer innervation patterns and the spatial extent of their axon terminals).
 
+Note that the results of the analysis presented in the paper (i. e., the IDs and cluster affiliations of the cells analyzed) are provided as a supplementary materials of the paper and you do not need to rerun the whole analysis if you are only interested in taking a closer look at the results.
+
 ## Geting started
 
 The code in this repository is written in Python 3. We recommend setting up a virtual environment for this repo using [conda](https://docs.conda.io/en/latest/).
