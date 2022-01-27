@@ -34,6 +34,8 @@ The script will
 - visualize the results of the clustering
 - perform additional analysis of connectivity from the resultant clusters to LC/LPLC neurons
 
+The results of the clustering will be saved under **data/results**.
+
 Free parameters of this analysis are as follows (see the paper for the details), with the values used in the paper in square brackets:
 1. Upper and lower boundaries of the numbers of (pre)synapses of the neurons to be analyzed [500, 50]
 2. The cell type to be used to as a landmark to define the layers of lobula [LT1]
@@ -45,5 +47,18 @@ When run for the first time, the script will ask you to type in parameters 1 thr
 
 When run for the first time, the script downloads the bodyIds of neurons that matches the synapse count criteria, as well as their synapse coordinates and connectivity. It also downloads synapse coordinates of the landmark cell. These process can take long, especially when you are analyzing a large number if neurons. **We recommend you to initially set the range of synapse count small (e. g., between 110 and 100) so you check if the code runs through properly without waiting too long.** The list of bodyIds, connectibity, synapse coordinates, and morphological features (i. e., innervation depth and synapse spread) calculated based on them, are all saved in the data directory, such that you do not need to repeat the time-consuming process of data download in the subsequent runs.
 
+In subsequent runs, the script will look for the saved connectivity and morphology matrices under **data/connectivity**,  **data/depth**, and **data/spread**. If it finds saved matrices, it will ask you to specify which matrix you want to use. You can also opt to run the analysis on a different set of cells.
 
 
+## Running the validation
+
+Run ```morphology_validation.py``` to generate the results shown in **Fig. 2** of the paper.
+This script will download the coordinates of postsynapses of specified LC and LPLC neuron types, and calculates morphological summary features.
+
+
+## Organizations of directory
+
+- ```lobulaclustering.py``` : the main clustering description
+- ```morphology_validation.py``` : the script to validate the morphology summary features by analyzing LC/LPLCs with known morphology
+- modules : a folder containing modules to download, save, preprocess, and load connectivity and morphology data
+- data : a folder containing the end results of the clustering as well as downloaded and preprocessed intermediate data
