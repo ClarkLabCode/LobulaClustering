@@ -2,7 +2,7 @@
 
 This repository contains code to run the analysis presented in the following publication:
 
-[Tanaka, R. & Clark, D. A. (2022) Identifying inputs to visual projection neurons in *Drosophila* lobula by analyzing connectomic data. *bioRxiv*.](https://www.biorxiv.org/content/10.1101/2022.02.02.478876v1)
+[Tanaka, R. & Clark, D. A. (2022) Identifying inputs to visual projection neurons in *Drosophila* lobula by analyzing connectomic data. *eNeuro*.](https://www.eneuro.org/content/9/2/ENEURO.0053-22.2022)
 
 The goal of the analysis is to categorize fragmented lobula visual neurons in the [hemibrain](https://www.janelia.org/project-team/flyem/hemibrain) dataset into putative cell types, based on their connectivity to identified cell types as well as their morphology (layer innervation patterns and the spatial extent of their axon terminals).
 
